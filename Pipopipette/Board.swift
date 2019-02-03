@@ -25,19 +25,32 @@ public class Board {
     }
     
     public func areAdjacent(this dot: Dot, that otherDot: Dot) -> Bool {
-        let row = dot.num / size
-        let col = dot.num % size
+        if getAdjacents(for: dot).contains(otherDot) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    public func getAdjacents(for dot: Dot) -> [Dot] {
+        var adjacents = [Dot]()
         
-        let otherRow = otherDot.num / size
-        let otherCol = otherDot.num % size
-        
-        if row - 1 == otherRow || row == otherRow || row + 1 == otherRow {
-            if col - 1 == otherCol || col == otherCol || col + 1 == otherCol {
-                return true
+        for num in [dot.num + 1, dot.num - 1, dot.num + size, dot.num - size] {
+            gameScene.enumerateChildNodes(withName: "dot\(num)") {
+                (node, stop) in
+                
+                if let adjacentDot = node as? Dot {
+                    adjacents.append(adjacentDot)
+                } else {
+                    print("Error @ getAdjacents casting adjacentDot to Dot")
+                }
             }
         }
         
-        return false
+        return adjacents
     }
-
+    
+    public func checkSquare() {
+        
+    }
 }

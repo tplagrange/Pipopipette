@@ -11,13 +11,15 @@ import SpriteKit
 
 public class BoardCell {
     
-    private let borderDots: [SKSpriteNode]
+    private let borderDots: [Dot]
     
-    init(borderDots: [SKSpriteNode]) {
+    init(borderDots: [Dot]) {
         self.borderDots = borderDots
+        
     }
     
-    public func getBorderDots() -> [SKSpriteNode] {
+    public func getBorderDots() -> [Dot] {
         return borderDots
     }
+    
 }

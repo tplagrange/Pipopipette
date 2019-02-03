@@ -49,4 +49,10 @@ public class Dot: SKSpriteNode {
     public func registerConnection(with otherDot: Dot) {
         connections.append(otherDot)
     }
+    
+    public func hasConnection(with otherDot: Dot) -> Bool {
+        return connections.contains(otherDot)
+    }
+    
 }
+

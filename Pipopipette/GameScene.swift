@@ -50,11 +50,11 @@ class GameScene: SKScene {
             if dotNumber + 1 + side >= numDots {
                 break
             }
-            var borderDots = [SKSpriteNode]()
-            borderDots.append( childNode(withName: "dot\(dotNumber)")! as! SKSpriteNode)
-            borderDots.append( childNode(withName: "dot\(dotNumber + 1)")! as! SKSpriteNode)
-            borderDots.append( childNode(withName: "dot\(dotNumber + side)")! as! SKSpriteNode)
-            borderDots.append( childNode(withName: "dot\(dotNumber + 1 + side)")! as! SKSpriteNode)
+            var borderDots = [Dot]()
+            borderDots.append( childNode(withName: "dot\(dotNumber)")! as! Dot)
+            borderDots.append( childNode(withName: "dot\(dotNumber + 1)")! as! Dot)
+            borderDots.append( childNode(withName: "dot\(dotNumber + side)")! as! Dot)
+            borderDots.append( childNode(withName: "dot\(dotNumber + 1 + side)")! as! Dot)
             squares!.append( BoardCell(borderDots: borderDots) )
         }
         
@@ -98,7 +98,7 @@ class GameScene: SKScene {
     }
     
     func touchMoved(toPoint pos : CGPoint) {
-
+        
     }
     
     func touchUp(atPoint pos : CGPoint) {
@@ -107,12 +107,13 @@ class GameScene: SKScene {
             if isDotSelected != nil && isDotSelected! {
                 if let dot = touchedNode as? Dot {
                     if board!.areAdjacent(this: dot, that: dotSelected!) {
-                        print("Draw the line!")
                         dot.connect(to: dotSelected!)
                     }
                 }
             }
         }
+        isDotSelected = false
+        dotSelected = nil
     }
     
     override func mouseDown(with event: NSEvent) {
