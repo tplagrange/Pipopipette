@@ -16,6 +16,28 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         
+        // Number of dots on the board
+        let side = 5
+        let dots = side * side
+        backgroundColor = SKColor.white
+        
+        for dotNumber in 0..<dots {
+            let dot = SKSpriteNode(imageNamed: "dot")
+            dot.size = CGSize(width: 16, height: 16)
+            // Based on the dot we are placing and the total number of dots
+            // We can assess the position in the screen to place the dot
+            // First, assess which row and column this dot is in (index starts at 1)
+            let row = CGFloat(1 + (dotNumber / side))
+            let col = CGFloat(1 + (dotNumber % side))
+            let xPos = size.width * (row / CGFloat(side + 1))
+            let yPos = size.height * (col / CGFloat(side + 1))
+            dot.position = CGPoint(x: xPos - (size.width / 2), y: yPos - (size.height / 2))
+            print("\(size.width * (row / CGFloat(side + 1)))/\(size.width), \(size.height * (col / CGFloat(side + 1)))/\(size.height)")
+            addChild(dot)
+        }
+        
+        /// Below is all from the default xcode game template
+        
         // Get label node from scene and store it for use later
         self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
         if let label = self.label {
