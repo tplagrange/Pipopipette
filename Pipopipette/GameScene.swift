@@ -11,31 +11,55 @@ import GameplayKit
 
 class GameScene: SKScene {
     
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
+    private var label: SKLabelNode?
+    private var spinnyNode: SKShapeNode?
+    private var board: Board?
+    private var squares: [BoardCell]?
+    private var dots: [Dot]?
+    private var isDotSelected: Bool?
+    private var dotSelected: Dot?
+    private var maxDistance: CGFloat?
     
     override func didMove(to view: SKView) {
         
         // Number of dots on the board
         let side = 5
-        let dots = side * side
-        backgroundColor = SKColor.white
+        let numDots = side * side
+        self.squares = [BoardCell]()
+        self.dots = [Dot]()
         
-        for dotNumber in 0..<dots {
-            let dot = SKSpriteNode(imageNamed: "dot")
-            dot.size = CGSize(width: 16, height: 16)
+        // Layout the dots on our board
+        for dotNumber in 0..<numDots {
+            let dot = Dot(dotNumber, from: self)
+            dot.name = "dot\(dotNumber)"
             // Based on the dot we are placing and the total number of dots
             // We can assess the position in the screen to place the dot
             // First, assess which row and column this dot is in (index starts at 1)
             let row = CGFloat(1 + (dotNumber / side))
             let col = CGFloat(1 + (dotNumber % side))
-            let xPos = size.width * (row / CGFloat(side + 1))
-            let yPos = size.height * (col / CGFloat(side + 1))
-            dot.position = CGPoint(x: xPos - (size.width / 2), y: yPos - (size.height / 2))
-            print("\(size.width * (row / CGFloat(side + 1)))/\(size.width), \(size.height * (col / CGFloat(side + 1)))/\(size.height)")
+            let xPos = size.width * (col / CGFloat(side + 1)) - (size.width / 2)
+            let yOffset = CGFloat(side) + 1.0 - row
+            let yPos = size.height * (yOffset / CGFloat(side + 1)) - (size.height / 2)
+            dot.position = CGPoint(x: xPos, y: yPos)
+            dots!.append(dot)
             addChild(dot)
         }
         
+        // Prepare the squares enclosed by the dots
+        for dotNumber in 0..<numDots {
+            if dotNumber + 1 + side >= numDots {
+                break
+            }
+            var borderDots = [SKSpriteNode]()
+            borderDots.append( childNode(withName: "dot\(dotNumber)")! as! SKSpriteNode)
+            borderDots.append( childNode(withName: "dot\(dotNumber + 1)")! as! SKSpriteNode)
+            borderDots.append( childNode(withName: "dot\(dotNumber + side)")! as! SKSpriteNode)
+            borderDots.append( childNode(withName: "dot\(dotNumber + 1 + side)")! as! SKSpriteNode)
+            squares!.append( BoardCell(borderDots: borderDots) )
+        }
+        
+        // Prepare the board
+        self.board = Board(size: side, with: dots!, with: squares!, from: self)
         /// Below is all from the default xcode game template
         
         // Get label node from scene and store it for use later
@@ -59,28 +83,35 @@ class GameScene: SKScene {
         }
     }
     
-    
     func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
+        let touchedNodes = nodes(at: pos)
+        for touchedNode in touchedNodes {
+            if let dot = touchedNode as? Dot {
+                print(pos)
+                isDotSelected = true
+                dotSelected = dot
+                dot.run(SKAction.scale(to: 3.0, duration: 0.5), completion: {
+                    dot.run(SKAction.scale(to: 1.0, duration: 0.5))
+                })
+            }
         }
     }
     
     func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
+
     }
     
     func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
+        let touchedNodes = nodes(at: pos)
+        for touchedNode in touchedNodes {
+            if isDotSelected != nil && isDotSelected! {
+                if let dot = touchedNode as? Dot {
+                    if board!.areAdjacent(this: dot, that: dotSelected!) {
+                        print("Draw the line!")
+                        dot.connect(to: dotSelected!)
+                    }
+                }
+            }
         }
     }
     
