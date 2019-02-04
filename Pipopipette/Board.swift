@@ -50,7 +50,7 @@ public class Board {
         return adjacents
     }
     
-    public func checkSquare() {
+    public func checkForSquares(from dot: Dot) {
         
     }
 }

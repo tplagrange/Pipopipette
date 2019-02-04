@@ -18,7 +18,6 @@ class GameScene: SKScene {
     private var dots: [Dot]?
     private var isDotSelected: Bool?
     private var dotSelected: Dot?
-    private var maxDistance: CGFloat?
     
     override func didMove(to view: SKView) {
         
@@ -42,6 +41,12 @@ class GameScene: SKScene {
             let yPos = size.height * (yOffset / CGFloat(side + 1)) - (size.height / 2)
             dot.position = CGPoint(x: xPos, y: yPos)
             dots!.append(dot)
+            
+            // Labels for debugging
+            let label = SKLabelNode(text: "\(dot.num)")
+            label.position = dot.position
+            label.position.y += 20
+            addChild(label)
             addChild(dot)
         }
         
@@ -60,27 +65,6 @@ class GameScene: SKScene {
         
         // Prepare the board
         self.board = Board(size: side, with: dots!, with: squares!, from: self)
-        /// Below is all from the default xcode game template
-        
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
-        }
-        
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
-        
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
-            
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        }
     }
     
     func touchDown(atPoint pos : CGPoint) {
@@ -108,6 +92,7 @@ class GameScene: SKScene {
                 if let dot = touchedNode as? Dot {
                     if board!.areAdjacent(this: dot, that: dotSelected!) {
                         dot.connect(to: dotSelected!)
+                        board!.checkForSquares(from: dot)
                     }
                 }
             }
