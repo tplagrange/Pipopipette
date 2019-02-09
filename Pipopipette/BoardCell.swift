@@ -9,15 +9,33 @@
 import Foundation
 import SpriteKit
 
-public class BoardCell {
+public class BoardCell: SKSpriteNode {
     
-    private let borderDots: [SKSpriteNode]
+    private let borderDots: [Dot]
+    private let num: Int
+    private var filled = false
     
-    init(borderDots: [SKSpriteNode]) {
+    init(num: Int, borderDots: [Dot]) {
         self.borderDots = borderDots
+        self.num = num
+        let texture = SKTexture(imageNamed: "red_square")
+        super.init(texture: texture, color: SKColor.clear , size: CGSize(width: 32, height: 32) )
+        print("Square #\(num) bordered by:")
+        for borderDot in borderDots {
+            print(borderDot.num)
+        }
     }
     
-    public func getBorderDots() -> [SKSpriteNode] {
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func getBorderDots() -> [Dot] {
         return borderDots
     }
+    
+    public func isFilled() -> Bool {
+        return filled
+    }
+    
 }

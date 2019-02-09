@@ -10,7 +10,7 @@ import Foundation
 import SpriteKit
 
 public class Board {
-    private let size: Int
+    public let size: Int
     private let numDots: Int
     private let dots: [SKSpriteNode]
     private let squares: [BoardCell]
@@ -25,19 +25,14 @@ public class Board {
     }
     
     public func areAdjacent(this dot: Dot, that otherDot: Dot) -> Bool {
-        let row = dot.num / size
-        let col = dot.num % size
-        
-        let otherRow = otherDot.num / size
-        let otherCol = otherDot.num % size
-        
-        if row - 1 == otherRow || row == otherRow || row + 1 == otherRow {
-            if col - 1 == otherCol || col == otherCol || col + 1 == otherCol {
-                return true
-            }
+        if dot.getAdjacents().contains(otherDot) {
+            return true
+        } else {
+            return false
         }
-        
-        return false
     }
-
+    
+    public func checkForSquares(from dot: Dot, and otherDot: Dot) {
+        
+    }
 }
