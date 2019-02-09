@@ -39,7 +39,7 @@ class GameScene: SKScene {
             let xPos = size.width * (col / CGFloat(dotsPerRow + 1)) - (size.width / 2)
             let yOffset = CGFloat(dotsPerRow) + 1.0 - row
             let yPos = size.height * (yOffset / CGFloat(dotsPerRow + 1)) - (size.height / 2)
-            let dot = Dot(dotNumber, Int(row), Int(col), from: self)
+            let dot = Dot(dotNumber, from: self)
             dot.name = "dot\(dotNumber)"
             dot.position = CGPoint(x: xPos, y: yPos)
             dots!.append(dot)

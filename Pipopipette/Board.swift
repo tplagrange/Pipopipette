@@ -10,7 +10,7 @@ import Foundation
 import SpriteKit
 
 public class Board {
-    private let size: Int
+    public let size: Int
     private let numDots: Int
     private let dots: [SKSpriteNode]
     private let squares: [BoardCell]
