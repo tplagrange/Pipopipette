@@ -11,64 +11,89 @@ import GameplayKit
 
 class GameScene: SKScene {
     
-    private var label: SKLabelNode?
-    private var spinnyNode: SKShapeNode?
+    private var scoreLabel: SKLabelNode?
     private var board: Board?
-    private var squares: [BoardCell]?
-    private var dots: [Dot]?
+    private var squares: [[BoardCell]]?
+    private var dots: [[Dot]]?
     private var isDotSelected: Bool?
     private var dotSelected: Dot?
     
     override func didMove(to view: SKView) {
         
         // Number of dots on the board
-        let dotsPerRow = 5  // Change this to being passed by the meny screen
+        let dotsPerRow = 3 // Change this to being passed by the meny screen
         let squaresPerRow = dotsPerRow - 1
-        let numDots = dotsPerRow * dotsPerRow
-        let numSquares = squaresPerRow * squaresPerRow
-        self.squares = [BoardCell]()
-        self.dots = [Dot]()
+        self.squares = [[BoardCell]]()
+        self.dots = [[Dot]]()
         
         // Layout the dots on our GUI board
-        for dotNumber in 0..<numDots {
-            // Based on the dot we are placing and the total number of dots
-            // We can assess the position in the screen to place the dot
-            // First, assess which row and column this dot is in (rows/cols start at 1)
-            let row = CGFloat(1 + (dotNumber / dotsPerRow))
-            let col = CGFloat(1 + (dotNumber % dotsPerRow))
-            let xPos = size.width * (col / CGFloat(dotsPerRow + 1)) - (size.width / 2)
-            let yOffset = CGFloat(dotsPerRow) + 1.0 - row
-            let yPos = size.height * (yOffset / CGFloat(dotsPerRow + 1)) - (size.height / 2)
-            let dot = Dot(dotNumber, from: self)
-            dot.name = "dot\(dotNumber)"
-            dot.position = CGPoint(x: xPos, y: yPos)
-            dots!.append(dot)
-            
-            // Labels for debugging
-            let label = SKLabelNode(text: "\(dot.num)")
-            label.position = dot.position
-            label.position.y += 20
-            addChild(label)
-            addChild(dot)
+        var dotNumber = 0
+        for _ in 0..<dotsPerRow {
+            var colDots = [Dot]()
+            for _ in 0..<dotsPerRow {
+                // Based on the dot we are placing and the total number of dots
+                // We can assess the position in the screen to place the dot
+                // First, assess which row and column this dot is in (rows/cols start at 1)
+                let row = CGFloat(1 + (dotNumber / dotsPerRow))
+                let col = CGFloat(1 + (dotNumber % dotsPerRow))
+                let xPos = size.width * (col / CGFloat(dotsPerRow + 1)) - (size.width / 2)
+                let yOffset = CGFloat(dotsPerRow) + 1.0 - row
+                let yPos = size.height * (yOffset / CGFloat(dotsPerRow + 1)) - (size.height / 2)
+                let dot = Dot(dotNumber, Int(row), Int(col), from: self)
+                dot.name = "dot\(dotNumber)"
+                dot.position = CGPoint(x: xPos, y: yPos)
+                colDots.append(dot)
+                addChild(dot)
+                dotNumber += 1
+            }
+            dots!.append(colDots)
         }
         
         // Prepare the squares enclosed by the dots
-        for squareNum in 0..<numSquares {
-            let row = squareNum / squaresPerRow
-            let col = squareNum % squaresPerRow
-            let topLeftDot     = childNode(withName: "dot\((dotsPerRow * row) + col)")! as! Dot
-            let topRightDot    = childNode(withName: "dot\((dotsPerRow * row) + (col + 1))")! as! Dot
-            let bottomLeftDot  = childNode(withName: "dot\((dotsPerRow * (row + 1)) + col)")! as! Dot
-            let bottomRightDot = childNode(withName: "dot\((dotsPerRow * (row + 1)) + col + 1)")! as! Dot
-            squares!.append( BoardCell(num: squareNum, borderDots: [topLeftDot, topRightDot, bottomLeftDot, bottomRightDot]))
+        var squareNum = 0
+        for _ in 0..<squaresPerRow {
+            var colSquares = [BoardCell]()
+            for _ in 0..<squaresPerRow {
+                let row = squareNum / squaresPerRow
+                let col = squareNum % squaresPerRow
+                let topLeftDot     = dots![row][col]
+                let topRightDot    = dots![row][col + 1]
+                let bottomLeftDot  = dots![row + 1][col]
+                let bottomRightDot = dots![row + 1][col + 1]
+                colSquares.append( BoardCell(num: squareNum, borderDots: [topLeftDot, topRightDot, bottomLeftDot, bottomRightDot]))
+                squareNum += 1
+            }
+            squares!.append(colSquares)
         }
         
         // Prepare the board
-        self.board = Board(size: dotsPerRow, with: dots!, with: squares!, from: self)
+        self.board = Board(size: dotsPerRow, with: dots!, with: squares!)
+        board!.setAsOriginal()
     }
     
     public func getBoard() -> Board? {
         return board
+    }
+    
+    public func updateScores() {
+        if let originalBoard = board {
+            let humanScore = originalBoard.getHumanScore()
+            let computerScore = originalBoard.getComputerScore()
+            if let label = scoreLabel {
+                label.text = "Human: \(humanScore)    AI: \(computerScore)"
+            } else {
+                let label = SKLabelNode(text: "Human: \(humanScore)    AI: \(computerScore)")
+                let screenWidth = size.width
+                let screenHeight = size.height
+                label.position = CGPoint(x: -100, y: 100)
+                addChild(label)
+                scoreLabel = label
+            }
+        }
+    }
+    
+    public func updateSquares() {
+        
     }
     
     func touchDown(atPoint pos : CGPoint) {
@@ -94,9 +119,11 @@ class GameScene: SKScene {
         for touchedNode in touchedNodes {
             if isDotSelected != nil && isDotSelected! {
                 if let dot = touchedNode as? Dot {
+                    if dotSelected!.hasConnection(with: dot) {
+                        break
+                    }
                     if board!.areAdjacent(this: dot, that: dotSelected!) {
-                        dot.connect(to: dotSelected!)
-                        board!.checkForSquares(from: dot, and: dotSelected!)
+                        board!.initiateHumanMove(with: dot, and: dotSelected!)
                     }
                 }
             }
@@ -119,10 +146,6 @@ class GameScene: SKScene {
     
     override func keyDown(with event: NSEvent) {
         switch event.keyCode {
-        case 0x31:
-            if let label = self.label {
-                label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-            }
         default:
             print("keyDown: \(event.characters!) keyCode: \(event.keyCode)")
         }
@@ -130,6 +153,6 @@ class GameScene: SKScene {
     
     
     override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
+        updateScores()
     }
 }

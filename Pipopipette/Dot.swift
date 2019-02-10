@@ -10,41 +10,60 @@ import SpriteKit
 
 public class Dot: SKSpriteNode {
     public let num: Int
+    public let x: Int
+    public let y: Int
     private var connections = [Dot]()
-    private var adjacents = [Dot]()
     private let gameScene: GameScene
     
-    init(_ num: Int, from gameScene: GameScene) {
+    init(_ num: Int, _ row: Int, _ col: Int, from gameScene: GameScene) {
         self.num = num
+        self.x = row - 1
+        self.y = col - 1
         self.gameScene = gameScene
         let texture = SKTexture(imageNamed: "dot")
         super.init(texture: texture, color: SKColor.clear , size: CGSize(width: 32, height: 32) )
-        setAdjacents()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func connect(to otherDot: Dot) {
-        if connections.contains(otherDot) {
-            // Alert that the move is not valid?
+    public func copy() -> Dot {
+        let copyDot = Dot(num, x + 1, y + 1, from: gameScene)
+        copyDot.setConnections(as: connections)
+        return copyDot
+    }
+    
+    public func setConnections(as newConnections: [Dot]) {
+        connections = newConnections
+    }
+    
+    public func connect(to otherDot: Dot, as computerPlayer: Bool, from originalBoard: Bool) {
+        if self.hasConnection(with: otherDot) {
+            print("returning from connect")
             return
         }
         
-        // Render the line
-        let line = SKShapeNode()
-        let path = CGMutablePath()
-        path.move(to: self.position)
-        path.addLine(to: otherDot.position)
-        line.path = path
-        line.strokeColor = SKColor.red
-        line.lineWidth = 5
+        if originalBoard {
+            // Render the line
+            let line = SKShapeNode()
+            let path = CGMutablePath()
+            path.move(to: self.position)
+            path.addLine(to: otherDot.position)
+            line.path = path
+            // Change color depending on who made the move
+            if computerPlayer {
+                line.strokeColor = SKColor.white
+            } else {
+                line.strokeColor = SKColor.red
+            }
+            line.lineWidth = 5
+            
+            gameScene.addChild(line)
+        }
         
         connections.append(otherDot)
         otherDot.registerConnection(with: self)
-        
-        gameScene.addChild(line)
     }
     
     public func registerConnection(with otherDot: Dot) {
@@ -52,79 +71,12 @@ public class Dot: SKSpriteNode {
     }
     
     public func hasConnection(with otherDot: Dot) -> Bool {
-        return connections.contains(otherDot)
-    }
-    
-    /// Getters ///
-    public func getAdjacents() -> [Dot] {
-        return adjacents
-    }
-    
-    // There must be a better way to do these four functions...
-    public func up() -> Dot? {
-        if let board = gameScene.getBoard() {
-            if let dot = gameScene.childNode(withName: "dot\(num - board.size)") {
-                return (dot as! Dot)
-            } else {
-                return nil
-            }
-        } else {
-            return nil
-        }
-    }
-    
-    public func down() -> Dot? {
-        if let board = gameScene.getBoard() {
-            if let dot = gameScene.childNode(withName: "dot\(num + board.size)") {
-                return (dot as! Dot)
-            } else {
-                return nil
-            }
-        } else {
-            return nil
-        }
-    }
-    
-    public func right() -> Dot? {
-        if let board = gameScene.getBoard() {
-            if let dot = gameScene.childNode(withName: "dot\(num + 1)") {
-                if (num + 1) % board.size < num % board.size {
-                    return nil
-                } else {
-                    return (dot as! Dot)
-                }
-            } else {
-                return nil
-            }
-        } else {
-            return nil
-        }
-    }
-    
-    public func left() -> Dot? {
-        if let board = gameScene.getBoard() {
-            if let dot = gameScene.childNode(withName: "dot\(num - 1)") {
-                if (num - 1) % board.size > num % board.size {
-                    return nil
-                } else {
-                    return (dot as! Dot)
-                }
-            } else {
-                return nil
-            }
-        } else {
-            return nil
-        }
-    }
-    
-    private func setAdjacents() {
-        for node in [ up(), right(), down(), left()] {
-            if node == nil {
-                continue
-            } else {
-                adjacents.append(node!)
+        for connection in connections {
+            if connection.x == otherDot.x && connection.y == otherDot.y {
+                return true
             }
         }
+        return false
     }
     
 }

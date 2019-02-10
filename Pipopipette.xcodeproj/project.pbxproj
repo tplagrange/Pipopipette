@@ -17,6 +17,8 @@
 		17E6CE9C2207585D00E97F57 /* BoardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E6CE9B2207585D00E97F57 /* BoardCell.swift */; };
 		17E6CEA02207636900E97F57 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E6CE9F2207636900E97F57 /* Board.swift */; };
 		17E6CEA22207671000E97F57 /* Dot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E6CEA12207671000E97F57 /* Dot.swift */; };
+		17EE9BBA220F66C6008184D0 /* Minimax.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EE9BB9220F66C6008184D0 /* Minimax.swift */; };
+		17EE9BBC220F6A7D008184D0 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EE9BBB220F6A7D008184D0 /* Node.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,8 @@
 		17E6CE9B2207585D00E97F57 /* BoardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardCell.swift; sourceTree = "<group>"; };
 		17E6CE9F2207636900E97F57 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		17E6CEA12207671000E97F57 /* Dot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dot.swift; sourceTree = "<group>"; };
+		17EE9BB9220F66C6008184D0 /* Minimax.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Minimax.swift; sourceTree = "<group>"; };
+		17EE9BBB220F6A7D008184D0 /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +81,8 @@
 				17E6CE9F2207636900E97F57 /* Board.swift */,
 				17E6CE9B2207585D00E97F57 /* BoardCell.swift */,
 				17E6CEA12207671000E97F57 /* Dot.swift */,
+				17EE9BB9220F66C6008184D0 /* Minimax.swift */,
+				17EE9BBB220F6A7D008184D0 /* Node.swift */,
 			);
 			path = Pipopipette;
 			sourceTree = "<group>";
@@ -156,8 +162,10 @@
 				17E6CE8C220684F800E97F57 /* ViewController.swift in Sources */,
 				17E6CE8A220684F800E97F57 /* GameScene.swift in Sources */,
 				17E6CEA02207636900E97F57 /* Board.swift in Sources */,
+				17EE9BBC220F6A7D008184D0 /* Node.swift in Sources */,
 				17E6CE9C2207585D00E97F57 /* BoardCell.swift in Sources */,
 				17E6CE84220684F800E97F57 /* AppDelegate.swift in Sources */,
+				17EE9BBA220F66C6008184D0 /* Minimax.swift in Sources */,
 				17E6CEA22207671000E97F57 /* Dot.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

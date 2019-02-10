@@ -12,19 +12,22 @@ import SpriteKit
 public class BoardCell: SKSpriteNode {
     
     private let borderDots: [Dot]
-    private let num: Int
-    private var filled = false
+    
+    public let num: Int
+    public var score = Int.random(in: 1...5)
+    
+    public var top    = false
+    public var right  = false
+    public var bottom = false
+    public var left   = false
     
     init(num: Int, borderDots: [Dot]) {
         self.borderDots = borderDots
         self.num = num
         let texture = SKTexture(imageNamed: "red_square")
         super.init(texture: texture, color: SKColor.clear , size: CGSize(width: 32, height: 32) )
-        print("Square #\(num) bordered by:")
-        for borderDot in borderDots {
-            print(borderDot.num)
-        }
     }
+    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -34,8 +37,18 @@ public class BoardCell: SKSpriteNode {
         return borderDots
     }
     
-    public func isFilled() -> Bool {
-        return filled
+    public func copy() -> BoardCell {
+        var copyBorderDots = [Dot]()
+        for dot in borderDots {
+            copyBorderDots.append(dot.copy())
+        }
+        let square = BoardCell(num: num, borderDots: copyBorderDots)
+        square.top = top
+        square.right = right
+        square.bottom = bottom
+        square.left = left
+        square.score = score
+        return square
     }
     
 }
