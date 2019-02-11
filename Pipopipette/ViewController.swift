@@ -10,22 +10,25 @@ import Cocoa
 import SpriteKit
 import GameplayKit
 
+// Representation of the GUI
 class ViewController: NSViewController {
 
     @IBOutlet var skView: SKView!
     
-    @IBOutlet weak var MainMenuLabel: NSTextField!
-    @IBOutlet weak var DotsPerSideInput: NSTextField!
-    @IBOutlet weak var PlyInput: NSTextField!
-    @IBOutlet weak var PlayButton: NSButton!
+    @IBOutlet weak var MainMenuLabel: NSTextField!    // The title text
+    @IBOutlet weak var DotsPerSideInput: NSTextField! // The first text input
+    @IBOutlet weak var PlyInput: NSTextField!         // The second text input
+    @IBOutlet weak var PlayButton: NSButton!          // Button that starts the game
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
+    // Method called when the 'play' button is called
     @IBAction func playButtonWasPressed(_ sender: NSButton) {
         if let view = self.skView {
+            
             // Retrieve inputs from menu
             let dotsPerSide = DotsPerSideInput.integerValue
             let ply         = PlyInput.integerValue
