@@ -9,7 +9,7 @@
 import Foundation
 import SpriteKit
 
-public class BoardCell: SKSpriteNode {
+public class BoardCell {
     
     private let borderDots: [Dot]
     
@@ -24,13 +24,6 @@ public class BoardCell: SKSpriteNode {
     init(num: Int, borderDots: [Dot]) {
         self.borderDots = borderDots
         self.num = num
-        let texture = SKTexture(imageNamed: "red_square")
-        super.init(texture: texture, color: SKColor.clear , size: CGSize(width: 32, height: 32) )
-    }
-    
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     public func getBorderDots() -> [Dot] {
