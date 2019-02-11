@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11134" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11134"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -673,7 +674,7 @@
                         <outlet property="delegate" destination="Voe-Tx-rLC" id="PrD-fu-P6m"/>
                     </connections>
                 </application>
-                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModuleProvider="target"/>
+                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Pipopipette" customModuleProvider="target"/>
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -686,9 +687,10 @@
                     <window key="window" title="Pipopipette" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="196" y="240" width="480" height="270"/>
+                        <rect key="contentRect" x="196" y="240" width="960" height="960"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
-			<connections>
+                        <value key="minSize" type="size" width="960" height="960"/>
+                        <connections>
                             <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
                         </connections>
                     </window>
@@ -703,18 +705,74 @@
         <!--View Controller-->
         <scene sceneID="hIz-AP-VOD">
             <objects>
-                <viewController id="XfG-lQ-9wD" customClass="ViewController" customModuleProvider="target"  sceneMemberID="viewController">
+                <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="Pipopipette" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl" customClass="SKView">
                         <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Iiu-7I-Wcw">
+                                <rect key="frame" x="355" y="376" width="91" height="22"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="91" id="Hry-fc-aac"/>
+                                </constraints>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Dots per Side" drawsBackground="YES" id="Q9o-Nx-F3i">
+                                    <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="mhb-Rh-ShL"/>
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="62N-vI-Kkg">
+                                <rect key="frame" x="355" y="344" width="91" height="22"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Ply" drawsBackground="YES" id="qi8-T6-R6I">
+                                    <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="sLs-Ak-rJh"/>
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gnU-1v-cH5">
+                                <rect key="frame" x="349" y="308" width="70" height="32"/>
+                                <buttonCell key="cell" type="push" title="Play!" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gQl-zj-SQh">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="playButtonWasPressed:" target="XfG-lQ-9wD" id="LAM-iJ-lfB"/>
+                                </connections>
+                            </button>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UxQ-ww-Jra">
+                                <rect key="frame" x="244" y="475" width="313" height="71"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Pipopipette" id="KRn-Qb-rNf">
+                                    <font key="font" size="60" name="HelveticaNeue"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="Iiu-7I-Wcw" firstAttribute="top" secondItem="UxQ-ww-Jra" secondAttribute="bottom" constant="77" id="1ko-eZ-SC1"/>
+                            <constraint firstItem="UxQ-ww-Jra" firstAttribute="centerX" secondItem="Iiu-7I-Wcw" secondAttribute="centerX" id="4cC-9q-Q2D"/>
+                            <constraint firstItem="62N-vI-Kkg" firstAttribute="leading" secondItem="gnU-1v-cH5" secondAttribute="leading" id="4gP-Ea-K3H"/>
+                            <constraint firstItem="62N-vI-Kkg" firstAttribute="top" secondItem="Iiu-7I-Wcw" secondAttribute="bottom" constant="10" symbolic="YES" id="O5g-jS-9DT"/>
+                            <constraint firstItem="UxQ-ww-Jra" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="54" id="Tc7-1y-hWC"/>
+                            <constraint firstItem="Iiu-7I-Wcw" firstAttribute="trailing" secondItem="62N-vI-Kkg" secondAttribute="trailing" id="Xco-83-FkB"/>
+                            <constraint firstItem="gnU-1v-cH5" firstAttribute="top" secondItem="62N-vI-Kkg" secondAttribute="bottom" constant="8" symbolic="YES" id="aNI-Ux-WGG"/>
+                            <constraint firstItem="Iiu-7I-Wcw" firstAttribute="leading" secondItem="62N-vI-Kkg" secondAttribute="leading" id="dCb-2W-rNh"/>
+                            <constraint firstItem="UxQ-ww-Jra" firstAttribute="centerX" secondItem="m2S-Jp-Qdl" secondAttribute="centerX" id="tZ6-te-Pxw"/>
+                        </constraints>
                     </view>
                     <connections>
+                        <outlet property="DotsPerSideInput" destination="Iiu-7I-Wcw" id="bew-kD-u6Z"/>
+                        <outlet property="MainMenuLabel" destination="UxQ-ww-Jra" id="GgB-6Y-qX1"/>
+                        <outlet property="PlayButton" destination="gnU-1v-cH5" id="Ufz-9P-DiH"/>
+                        <outlet property="PlyInput" destination="62N-vI-Kkg" id="OIa-uG-6ik"/>
                         <outlet property="skView" destination="m2S-Jp-Qdl" id="qux-te-cT3"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="817"/>
+            <point key="canvasLocation" x="75" y="1303"/>
         </scene>
     </scenes>
 </document>

@@ -13,7 +13,9 @@ public func minimax(on currentBoard: Board, to ply: Int) {
     let startnode = Node(is: nodeType.MAX, parent: nil, with: currentBoard.copy())
 
     // Expand my nodes down to ply
-    generateNodes(from: startnode, to: ply)
+    DispatchQueue.global(qos: .userInitiated).sync {
+        generateNodes(from: startnode, to: ply)
+    }
     
     let maxScore = backUpValues(from: startnode)
     
@@ -88,11 +90,15 @@ private func generateNodes(from node: Node, to ply: Int ) {
         let col = dotNumber % dotsPerSide
         
         let dot = dots[row][col]
-        // This loop runs O(n<=4)
+        
+        let generateNodesGroup = DispatchGroup()
+        
         for adjacent in board.getAdjacents(of: dot) {
             if dot.hasConnection(with: adjacent) {
                 continue
             } else {
+                generateNodesGroup.enter()
+                
                 let newBoard = board.copy()
                 let newDots = newBoard.getDots()
                 
@@ -103,10 +109,13 @@ private func generateNodes(from node: Node, to ply: Int ) {
                 }
                 let newNode = Node(is: nodeLevel, parent: node, with: newBoard)
                 node.addChild(child: newNode)
-                
                 generateNodes(from: newNode, to: (ply - 1) )
+                
+                generateNodesGroup.leave()
             }
         }
+        
+        generateNodesGroup.wait()
     }
     
     return

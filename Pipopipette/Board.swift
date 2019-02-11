@@ -22,7 +22,7 @@ public class Board {
     private var original: Bool
     private var isComputerTurn = false
     
-    private let ply = 3
+    private var ply = 0
     
     init(size: Int, with dots: [[Dot]], with squares: [[BoardCell]]) {
         self.size = size
@@ -61,8 +61,13 @@ public class Board {
         newBoard.updateLastMove(with: dotOne, and: dotTwo)
         newBoard.setHumanScore(to: humanScore)
         newBoard.setComputerScore(to: computerScore)
+        newBoard.setPly(to: ply)
         
         return newBoard
+    }
+    
+    public func setPly(to ply: Int) {
+        self.ply = ply
     }
  
     public func initiateHumanMove(with dot: Dot, and otherDot: Dot) {
@@ -73,7 +78,12 @@ public class Board {
         updateLastMove(with: dot, and: otherDot)
         checkForSquares(from: dot, and: otherDot)
         isComputerTurn = true
-        startComputerTurn()
+        DispatchQueue.global(qos: .userInitiated).async { [ weak self] in
+            guard let self = self else {
+                return
+            }
+            self.startComputerTurn()
+        }
     }
     
     public func simulateHumanMove(with dot: Dot, and otherDot: Dot) {

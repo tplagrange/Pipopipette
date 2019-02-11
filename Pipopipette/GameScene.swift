@@ -11,6 +11,13 @@ import GameplayKit
 
 class GameScene: SKScene {
     
+    struct gameParamaterStruct {
+        let dotsPerSide: Int
+        let ply: Int
+    }
+    
+    private var gameParamaters: gameParamaterStruct?
+    
     private var scoreLabel: SKLabelNode?
     private var background = SKSpriteNode(imageNamed: "paper")
     private var board: Board?
@@ -25,7 +32,7 @@ class GameScene: SKScene {
         addChild(background)
         
         // Number of dots on the board
-        let dotsPerRow = 3 // Change this to being passed by the meny screen
+        let dotsPerRow = gameParamaters!.dotsPerSide
         let squaresPerRow = dotsPerRow - 1
         self.squares = [[BoardCell]]()
         self.dots = [[Dot]]()
@@ -83,7 +90,12 @@ class GameScene: SKScene {
         
         // Prepare the board
         self.board = Board(size: dotsPerRow, with: dots!, with: squares!)
+        board!.setPly(to: gameParamaters!.ply)
         board!.setAsOriginal()
+    }
+    
+    public func setParamaters(to dotsPerSide: Int, and ply: Int) {
+        gameParamaters = gameParamaterStruct(dotsPerSide: dotsPerSide, ply: ply)
     }
     
     public func getBoard() -> Board? {
